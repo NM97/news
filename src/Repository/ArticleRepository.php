@@ -46,6 +46,7 @@ class ArticleRepository extends ServiceEntityRepository
     public function findAllArticles(int $page)
     {
         $dbquery = $this->createQueryBuilder('p')
+            ->orderBy('p.created_at', 'DESC')
             ->getQuery()
             ->getResult();
         return $this->paginator->paginate($dbquery, $page, 10);
