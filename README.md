@@ -1,50 +1,87 @@
-# Symfony Docker
+## Installation Guide
 
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
-with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside!
+1. **Install Docker Desktop**: Ensure that you have Docker Desktop installed on your system. Installation instructions can be found on the official Docker website [here](https://www.docker.com/products/docker-desktop/).
 
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+2. **Clone the Repository**: Open a terminal or command prompt and execute the following command:
 
-## Getting Started
+    ```bash
+    git clone https://github.com/NM97/news.git
+    ```
 
-1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
-2. Run `docker compose build --no-cache` to build fresh images
-3. Run `docker compose up --pull always -d --wait` to start the project
-4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
-5. Run `docker compose down --remove-orphans` to stop the Docker containers.
+3. **Navigate to the Project Directory**: Navigate to the `news` directory that was created after cloning the repository:
 
-## Features
+    ```bash
+    cd news
+    ```
 
-* Production, development and CI ready
-* Just 1 service by default
-* Blazing-fast performance thanks to [the worker mode of FrankenPHP](https://github.com/dunglas/frankenphp/blob/main/docs/worker.md) (automatically enabled in prod mode)
-* [Installation of extra Docker Compose services](docs/extra-services.md) with Symfony Flex
-* Automatic HTTPS (in dev and prod)
-* HTTP/3 and [Early Hints](https://symfony.com/blog/new-in-symfony-6-3-early-hints) support
-* Real-time messaging thanks to a built-in [Mercure hub](https://symfony.com/doc/current/mercure.html)
-* [Vulcain](https://vulcain.rocks) support
-* Native [XDebug](docs/xdebug.md) integration
-* Super-readable configuration
+4. **Run Docker Containers**: In the terminal, execute the command:
 
-**Enjoy!**
+    ```bash
+    docker-compose up -d
+    ```
 
-## Docs
+5. **Install Symfony Dependencies**: Enter the PHP container to install Symfony dependencies. Execute:
 
-1. [Build options](docs/build.md)
-2. [Using Symfony Docker with an existing project](docs/existing-project.md)
-3. [Support for extra services](docs/extra-services.md)
-4. [Deploying in production](docs/production.md)
-5. [Debugging with Xdebug](docs/xdebug.md)
-6. [TLS Certificates](docs/tls.md)
-7. [Using a Makefile](docs/makefile.md)
-8. [Using MySQL instead of PostgreSQL](docs/mysql.md)
-9. [Troubleshooting](docs/troubleshooting.md)
-10. [Updating the template](docs/updating.md)
+    ```bash
+    docker-compose exec php bash
+    ```
 
-## License
+    Then, within the PHP container, execute:
 
-Symfony Docker is available under the MIT License.
+    ```bash
+    composer install
+    ```
 
-## Credits
+6. **Configure Database Settings**: Next, configure the database settings in the `.env` file. After changing the configuration, you need to reset the PHP container with:
 
-Created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+    ```bash
+    docker restart container_name_php
+    ```
+
+    Use the following command to verify the MySQL IP:
+
+    ```bash
+    docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name
+    ```
+
+    To check the name of the PHP and MySQL container use the command:
+
+    ```bash
+    docker -ps
+    ```
+
+7. **Generate Symfony Application Key**: Inside the PHP container, execute:
+
+    ```bash
+    php bin/console doctrine:database:create
+    php bin/console doctrine:migrations:migrate
+    php bin/console doctrine:fixtures:load
+    php bin/console cache:clear
+    ```
+
+8. **Run the Application in Developer Mode**: Before previewing the application, make sure you have executed `npm install` and `npm run watch` commands in the project's main directory. Open two additional terminals, execute `npm install` in one, and then in the second terminal execute `npm run watch`.
+
+9. **Preview the Application**: After completing the above steps, you can open a web browser and go to [http://localhost:8000](http://localhost:8000) to see the running application.
+
+
+## API Endpoints
+
+* /api/top-authors
+* /api/author/{id}/articles
+* /api/article/{id}
+
+## App Route
+
+* /
+* /login
+* /register
+* /article/new
+* /article/{id}
+* /article/{id}/edit
+* /article/{id}/delete
+* /dashboard
+* /dashboard/profile
+
+## Additional information 
+
+The application using fixtures will generate sample database entries (a dozen articles and a few users). You can log in to the system with a login test@test.pl and a password test@test.pl.
