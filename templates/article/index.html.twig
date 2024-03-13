@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	All articles
+{% endblock %}
+
+{% block body %}
+	{# latest articles #}
+	<div class="my-14">
+		<h1 class="text-6xl tracking-tighter font-bold mb-6">Latest articles</h1>
+		<hr/>
+	</div>
+
+	{# articles #}
+	{% for article in articles %}
+		<div class="my-14 flex flex-col md:flex-row">
+			<div class="mr-10">
+				<p class=" text-gray-500">{{article.createdAt|date("d/m/Y")}}</p>
+				<p class="italic text-sm">by
+					{% for user in article.users %}
+						{{user.name}}
+					{% endfor %}
+				</p>
+			</div>
+			<div class="space-y-4">
+				<h1 class="text-3xl font-bold tracking-tighter">{{article.title}}</h1>
+				<p class="text-gray-500">{{article.text|slice(0, 200) ~ '...'}}</p>
+				<p>
+					<a class="text-red-500 hover:text-red-900 mt-8" href="{{ path('articles.show', {id:article.id}) }}">Read more</a>
+				</p>
+
+				{% if app.user %}
+					{% set break = false %}
+					{% for user in article.users %}
+						{% if app.user.id == user.id %}
+							<div class="flex">
+								<a href="{{ path('articles.edit', {id:article.id}) }}" title="edit" class="mr-2 cursor-pointer">
+									{{ include('svg_icons/edit_icon.html.twig') }}
+								</a>
+								<form method="post" action="{{ path('articles.delete', {id:article.id}) }}">
+									<button type="submit" onclick="return confirm('Are you sure?')" title="delete" class="cursor-pointer">
+										{{ include('svg_icons/delete_icon.html.twig') }}
+									</button>
+								</form>
+							</div>
+							{% set break = true %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+		<hr/>
+	{% endfor %}
+
+	<br>
+	{{ knp_pagination_render(articles) }}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Show a article
+{% endblock %}
+
+{% block body %}
+	<div class="my-14 flex flex-col">
+		<div class="text-center">
+			<h1 class="mb-10 text-6xl font-bold tracking-tighter mt-5">{{article.title}}</h1>
+			<hr>
+		</div>
+
+		<p class="text-gray-500 mt-10 leading-8">
+			{{article.text}}
+		</p>
+
+		<div class="mt-10">
+			<hr>
+			<p class="text-xl">by
+				{% for user in article.users %}
+					{{user.name}}
+				{% endfor %}
+			</p>
+			<p class="italic text-sm">{{article.createdAt|date("j M Y, H:i")}}</p>
+		</div>
+	</div>
+{% endblock %}

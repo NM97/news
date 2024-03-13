@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+
+
+		<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	</head>
+	<body
+		class="font-sans antialiased">
+
+		{# container for all #}
+		<div
+			class="container mx-auto p-10">
+			{# header #}
+			<header
+				class="flex justify-between items-center">
+				{# logo, search #}
+				<div class="flex items-center">
+					<a href="{{path('articles.index')}}">
+						{{include('svg_icons/_logo.html.twig')}}
+						<div class="text-2xl hidden md:block tracking-tight text-gray-600 font-medium ml-2">
+							<a href="{{path('articles.index')}}">news</a>
+						</div>
+					</a>
+
+				</div>
+				{# links #}
+				<div class="space-x-6 hidden md:flex text-lg">
+					{% if is_granted('IS_AUTHENTICATED_FULLY')%}
+						<p>Logged as:
+							<a class="hover:text-stone-500" href="/dashboard">{{app.user.email}}</a>
+						</p>
+						{{include('_logout_form.html.twig')}}
+						<a href="{{ path('articles.new') }}" class="inline font-bold text-sm px-6 py-2 text-white rounded-full bg-red-500 hover:bg-red-600">
+							{%trans%}New article{%endtrans%}</a>
+					{% else %}
+						<a class="tracking-widest hover:text-stone-500" href="{{ path('app_login') }}">Login</a>
+						<a class="tracking-widest hover:text-stone-500" href="{{ path('app_register') }}">Register</a>
+					{% endif %}
+				</div>
+
+				{# hamburger icon #}
+				<div id="hamburger-icon" class="space-y-2 md:hidden cursor-pointer">
+					<div class="w-8 h-0.5 bg-gray-600"></div>
+					<div class="w-8 h-0.5 bg-gray-600"></div>
+					<div class="w-8 h-0.5 bg-gray-600"></div>
+				</div>
+			</header>
+
+			{# mobile menu #}
+			<div class="md:hidden">
+				<div id="mobile-menu" class="flex-col items-center hidden py-8 mt-10 space-y-6 bg-white left-6 right-6 drop-shadow-lg">
+					{% if is_granted('IS_AUTHENTICATED_FULLY')%}
+						<p>Logged as:
+							<a class="hover:text-stone-500" href="/">{{app.user.email}}</a>
+						</p>
+						{{include('_logout_form.html.twig')}}
+						<a href="{{ path('articles.new') }}" class="inline font-bold text-sm px-6 py-2 text-white rounded-full bg-red-500 hover:bg-red-600">
+							{%trans%}New article{%endtrans%}</a>
+					{% else %}
+						<a class="tracking-widest hover:text-stone-500" href="{{ path('app_login') }}">Login</a>
+						<a class="tracking-widest hover:text-stone-500" href="{{ path('app_register') }}">Register</a>
+					{% endif %}
+				</div>
+			</div>
+
+			{% block body %}{% endblock %}
+
+			{# footer #}
+			<footer class="flex items-center justify-center mt-12">
+				&copy; 2024 Nataniel Marmucki
+			</footer>
+
+		</div>
+	</body>
+</html>
