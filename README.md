@@ -66,21 +66,21 @@
 
 ## API Endpoints
 
-* /api/top-authors
-* /api/author/{id}/articles
-* /api/article/{id}
+* **/api/article/{id}** - article by some id
+* **/api/author/{id}/articles** - all articles for given author
+* **/api/top-authors** - top 3 authors that wrote the most articles last week
 
 ## App Route
 
-* /
-* /login
-* /register
-* /article/new
-* /article/{id}
-* /article/{id}/edit
-* /article/{id}/delete
-* /dashboard
-* /dashboard/profile
+* **/** - main view with list of articles
+* **/login** - login view 
+* **/register** - register view
+* **/article/new** - view of article creation (we have to be logged in)
+* **/article/{id}** - article preview view
+* **/article/{id}/edit** - article editing view (we have to be logged in and author. Pencil icon on the article list).
+* **/article/{id}/delete** - deleting of the article (we have to be logged in and the author. Trash icon on the article list)
+* **/dashboard** - user panel.
+* **/dashboard/profile** - user management panel.
 
 ## Additional information 
 
